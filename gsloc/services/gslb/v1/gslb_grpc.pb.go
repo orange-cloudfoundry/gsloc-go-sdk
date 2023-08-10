@@ -24,6 +24,7 @@ const (
 	GSLB_DeleteEntry_FullMethodName              = "/gsloc.services.gslb.v1.GSLB/DeleteEntry"
 	GSLB_GetEntry_FullMethodName                 = "/gsloc.services.gslb.v1.GSLB/GetEntry"
 	GSLB_ListEntries_FullMethodName              = "/gsloc.services.gslb.v1.GSLB/ListEntries"
+	GSLB_GetEntryStatus_FullMethodName           = "/gsloc.services.gslb.v1.GSLB/GetEntryStatus"
 	GSLB_AddMember_FullMethodName                = "/gsloc.services.gslb.v1.GSLB/AddMember"
 	GSLB_DeleteMember_FullMethodName             = "/gsloc.services.gslb.v1.GSLB/DeleteMember"
 	GSLB_SetMemberStatus_FullMethodName          = "/gsloc.services.gslb.v1.GSLB/SetMemberStatus"
@@ -40,6 +41,7 @@ type GSLBClient interface {
 	DeleteEntry(ctx context.Context, in *DeleteEntryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetEntry(ctx context.Context, in *GetEntryRequest, opts ...grpc.CallOption) (*GetEntryResponse, error)
 	ListEntries(ctx context.Context, in *ListEntriesRequest, opts ...grpc.CallOption) (*ListEntriesResponse, error)
+	GetEntryStatus(ctx context.Context, in *GetEntryStatusRequest, opts ...grpc.CallOption) (*GetEntryStatusResponse, error)
 	AddMember(ctx context.Context, in *AddMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteMember(ctx context.Context, in *DeleteMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SetMemberStatus(ctx context.Context, in *SetMemberStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -86,6 +88,15 @@ func (c *gSLBClient) GetEntry(ctx context.Context, in *GetEntryRequest, opts ...
 func (c *gSLBClient) ListEntries(ctx context.Context, in *ListEntriesRequest, opts ...grpc.CallOption) (*ListEntriesResponse, error) {
 	out := new(ListEntriesResponse)
 	err := c.cc.Invoke(ctx, GSLB_ListEntries_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gSLBClient) GetEntryStatus(ctx context.Context, in *GetEntryStatusRequest, opts ...grpc.CallOption) (*GetEntryStatusResponse, error) {
+	out := new(GetEntryStatusResponse)
+	err := c.cc.Invoke(ctx, GSLB_GetEntryStatus_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -154,6 +165,7 @@ type GSLBServer interface {
 	DeleteEntry(context.Context, *DeleteEntryRequest) (*emptypb.Empty, error)
 	GetEntry(context.Context, *GetEntryRequest) (*GetEntryResponse, error)
 	ListEntries(context.Context, *ListEntriesRequest) (*ListEntriesResponse, error)
+	GetEntryStatus(context.Context, *GetEntryStatusRequest) (*GetEntryStatusResponse, error)
 	AddMember(context.Context, *AddMemberRequest) (*emptypb.Empty, error)
 	DeleteMember(context.Context, *DeleteMemberRequest) (*emptypb.Empty, error)
 	SetMemberStatus(context.Context, *SetMemberStatusRequest) (*emptypb.Empty, error)
@@ -178,6 +190,9 @@ func (UnimplementedGSLBServer) GetEntry(context.Context, *GetEntryRequest) (*Get
 }
 func (UnimplementedGSLBServer) ListEntries(context.Context, *ListEntriesRequest) (*ListEntriesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListEntries not implemented")
+}
+func (UnimplementedGSLBServer) GetEntryStatus(context.Context, *GetEntryStatusRequest) (*GetEntryStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEntryStatus not implemented")
 }
 func (UnimplementedGSLBServer) AddMember(context.Context, *AddMemberRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddMember not implemented")
@@ -278,6 +293,24 @@ func _GSLB_ListEntries_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GSLBServer).ListEntries(ctx, req.(*ListEntriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GSLB_GetEntryStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEntryStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GSLBServer).GetEntryStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GSLB_GetEntryStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GSLBServer).GetEntryStatus(ctx, req.(*GetEntryStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -412,6 +445,10 @@ var GSLB_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListEntries",
 			Handler:    _GSLB_ListEntries_Handler,
+		},
+		{
+			MethodName: "GetEntryStatus",
+			Handler:    _GSLB_GetEntryStatus_Handler,
 		},
 		{
 			MethodName: "AddMember",

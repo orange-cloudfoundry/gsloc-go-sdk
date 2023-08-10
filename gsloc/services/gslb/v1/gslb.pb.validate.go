@@ -1721,3 +1721,422 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListDcsResponseValidationError{}
+
+// Validate checks the field values on MemberStatus with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *MemberStatus) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MemberStatus with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in MemberStatusMultiError, or
+// nil if none found.
+func (m *MemberStatus) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MemberStatus) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if ip := net.ParseIP(m.GetIp()); ip == nil {
+		err := MemberStatusValidationError{
+			field:  "Ip",
+			reason: "value must be a valid IP address",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetDc()) < 1 {
+		err := MemberStatusValidationError{
+			field:  "Dc",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for Status
+
+	// no validation rules for FailureReason
+
+	if len(errors) > 0 {
+		return MemberStatusMultiError(errors)
+	}
+
+	return nil
+}
+
+// MemberStatusMultiError is an error wrapping multiple validation errors
+// returned by MemberStatus.ValidateAll() if the designated constraints aren't met.
+type MemberStatusMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m MemberStatusMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m MemberStatusMultiError) AllErrors() []error { return m }
+
+// MemberStatusValidationError is the validation error returned by
+// MemberStatus.Validate if the designated constraints aren't met.
+type MemberStatusValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MemberStatusValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MemberStatusValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MemberStatusValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MemberStatusValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MemberStatusValidationError) ErrorName() string { return "MemberStatusValidationError" }
+
+// Error satisfies the builtin error interface
+func (e MemberStatusValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMemberStatus.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MemberStatusValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MemberStatusValidationError{}
+
+// Validate checks the field values on GetEntryStatusRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetEntryStatusRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetEntryStatusRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetEntryStatusRequestMultiError, or nil if none found.
+func (m *GetEntryStatusRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetEntryStatusRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetFqdn()) < 1 {
+		err := GetEntryStatusRequestValidationError{
+			field:  "Fqdn",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetEntryStatusRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetEntryStatusRequestMultiError is an error wrapping multiple validation
+// errors returned by GetEntryStatusRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetEntryStatusRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetEntryStatusRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetEntryStatusRequestMultiError) AllErrors() []error { return m }
+
+// GetEntryStatusRequestValidationError is the validation error returned by
+// GetEntryStatusRequest.Validate if the designated constraints aren't met.
+type GetEntryStatusRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetEntryStatusRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetEntryStatusRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetEntryStatusRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetEntryStatusRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetEntryStatusRequestValidationError) ErrorName() string {
+	return "GetEntryStatusRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetEntryStatusRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetEntryStatusRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetEntryStatusRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetEntryStatusRequestValidationError{}
+
+// Validate checks the field values on GetEntryStatusResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetEntryStatusResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetEntryStatusResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetEntryStatusResponseMultiError, or nil if none found.
+func (m *GetEntryStatusResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetEntryStatusResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetFqdn()) < 1 {
+		err := GetEntryStatusResponseValidationError{
+			field:  "Fqdn",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	for idx, item := range m.GetMembersIpv4() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetEntryStatusResponseValidationError{
+						field:  fmt.Sprintf("MembersIpv4[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetEntryStatusResponseValidationError{
+						field:  fmt.Sprintf("MembersIpv4[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetEntryStatusResponseValidationError{
+					field:  fmt.Sprintf("MembersIpv4[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetMembersIpv6() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetEntryStatusResponseValidationError{
+						field:  fmt.Sprintf("MembersIpv6[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetEntryStatusResponseValidationError{
+						field:  fmt.Sprintf("MembersIpv6[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetEntryStatusResponseValidationError{
+					field:  fmt.Sprintf("MembersIpv6[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GetEntryStatusResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetEntryStatusResponseMultiError is an error wrapping multiple validation
+// errors returned by GetEntryStatusResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetEntryStatusResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetEntryStatusResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetEntryStatusResponseMultiError) AllErrors() []error { return m }
+
+// GetEntryStatusResponseValidationError is the validation error returned by
+// GetEntryStatusResponse.Validate if the designated constraints aren't met.
+type GetEntryStatusResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetEntryStatusResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetEntryStatusResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetEntryStatusResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetEntryStatusResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetEntryStatusResponseValidationError) ErrorName() string {
+	return "GetEntryStatusResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetEntryStatusResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetEntryStatusResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetEntryStatusResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetEntryStatusResponseValidationError{}
