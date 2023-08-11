@@ -20,17 +20,19 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	GSLB_SetEntry_FullMethodName                 = "/gsloc.services.gslb.v1.GSLB/SetEntry"
-	GSLB_DeleteEntry_FullMethodName              = "/gsloc.services.gslb.v1.GSLB/DeleteEntry"
-	GSLB_GetEntry_FullMethodName                 = "/gsloc.services.gslb.v1.GSLB/GetEntry"
-	GSLB_ListEntries_FullMethodName              = "/gsloc.services.gslb.v1.GSLB/ListEntries"
-	GSLB_GetEntryStatus_FullMethodName           = "/gsloc.services.gslb.v1.GSLB/GetEntryStatus"
-	GSLB_AddMember_FullMethodName                = "/gsloc.services.gslb.v1.GSLB/AddMember"
-	GSLB_DeleteMember_FullMethodName             = "/gsloc.services.gslb.v1.GSLB/DeleteMember"
-	GSLB_SetMemberStatus_FullMethodName          = "/gsloc.services.gslb.v1.GSLB/SetMemberStatus"
-	GSLB_SetMembersStatusByFilter_FullMethodName = "/gsloc.services.gslb.v1.GSLB/SetMembersStatusByFilter"
-	GSLB_SetHealthCheck_FullMethodName           = "/gsloc.services.gslb.v1.GSLB/SetHealthCheck"
-	GSLB_ListDcs_FullMethodName                  = "/gsloc.services.gslb.v1.GSLB/ListDcs"
+	GSLB_SetEntry_FullMethodName         = "/gsloc.services.gslb.v1.GSLB/SetEntry"
+	GSLB_DeleteEntry_FullMethodName      = "/gsloc.services.gslb.v1.GSLB/DeleteEntry"
+	GSLB_GetEntry_FullMethodName         = "/gsloc.services.gslb.v1.GSLB/GetEntry"
+	GSLB_ListEntries_FullMethodName      = "/gsloc.services.gslb.v1.GSLB/ListEntries"
+	GSLB_GetEntryStatus_FullMethodName   = "/gsloc.services.gslb.v1.GSLB/GetEntryStatus"
+	GSLB_SetMember_FullMethodName        = "/gsloc.services.gslb.v1.GSLB/SetMember"
+	GSLB_DeleteMember_FullMethodName     = "/gsloc.services.gslb.v1.GSLB/DeleteMember"
+	GSLB_GetMember_FullMethodName        = "/gsloc.services.gslb.v1.GSLB/GetMember"
+	GSLB_ListMembers_FullMethodName      = "/gsloc.services.gslb.v1.GSLB/ListMembers"
+	GSLB_SetMembersStatus_FullMethodName = "/gsloc.services.gslb.v1.GSLB/SetMembersStatus"
+	GSLB_GetHealthCheck_FullMethodName   = "/gsloc.services.gslb.v1.GSLB/GetHealthCheck"
+	GSLB_SetHealthCheck_FullMethodName   = "/gsloc.services.gslb.v1.GSLB/SetHealthCheck"
+	GSLB_ListDcs_FullMethodName          = "/gsloc.services.gslb.v1.GSLB/ListDcs"
 )
 
 // GSLBClient is the client API for GSLB service.
@@ -42,10 +44,12 @@ type GSLBClient interface {
 	GetEntry(ctx context.Context, in *GetEntryRequest, opts ...grpc.CallOption) (*GetEntryResponse, error)
 	ListEntries(ctx context.Context, in *ListEntriesRequest, opts ...grpc.CallOption) (*ListEntriesResponse, error)
 	GetEntryStatus(ctx context.Context, in *GetEntryStatusRequest, opts ...grpc.CallOption) (*GetEntryStatusResponse, error)
-	AddMember(ctx context.Context, in *AddMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SetMember(ctx context.Context, in *SetMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteMember(ctx context.Context, in *DeleteMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	SetMemberStatus(ctx context.Context, in *SetMemberStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	SetMembersStatusByFilter(ctx context.Context, in *SetMembersStatusByFilterRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetMember(ctx context.Context, in *GetMemberRequest, opts ...grpc.CallOption) (*GetMemberResponse, error)
+	ListMembers(ctx context.Context, in *ListMembersRequest, opts ...grpc.CallOption) (*ListMembersResponse, error)
+	SetMembersStatus(ctx context.Context, in *SetMembersStatusRequest, opts ...grpc.CallOption) (*SetMembersStatusResponse, error)
+	GetHealthCheck(ctx context.Context, in *GetHealthCheckRequest, opts ...grpc.CallOption) (*GetHealthCheckResponse, error)
 	SetHealthCheck(ctx context.Context, in *SetHealthCheckRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListDcs(ctx context.Context, in *ListDcsRequest, opts ...grpc.CallOption) (*ListDcsResponse, error)
 }
@@ -103,9 +107,9 @@ func (c *gSLBClient) GetEntryStatus(ctx context.Context, in *GetEntryStatusReque
 	return out, nil
 }
 
-func (c *gSLBClient) AddMember(ctx context.Context, in *AddMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *gSLBClient) SetMember(ctx context.Context, in *SetMemberRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, GSLB_AddMember_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GSLB_SetMember_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -121,18 +125,36 @@ func (c *gSLBClient) DeleteMember(ctx context.Context, in *DeleteMemberRequest, 
 	return out, nil
 }
 
-func (c *gSLBClient) SetMemberStatus(ctx context.Context, in *SetMemberStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, GSLB_SetMemberStatus_FullMethodName, in, out, opts...)
+func (c *gSLBClient) GetMember(ctx context.Context, in *GetMemberRequest, opts ...grpc.CallOption) (*GetMemberResponse, error) {
+	out := new(GetMemberResponse)
+	err := c.cc.Invoke(ctx, GSLB_GetMember_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gSLBClient) SetMembersStatusByFilter(ctx context.Context, in *SetMembersStatusByFilterRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, GSLB_SetMembersStatusByFilter_FullMethodName, in, out, opts...)
+func (c *gSLBClient) ListMembers(ctx context.Context, in *ListMembersRequest, opts ...grpc.CallOption) (*ListMembersResponse, error) {
+	out := new(ListMembersResponse)
+	err := c.cc.Invoke(ctx, GSLB_ListMembers_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gSLBClient) SetMembersStatus(ctx context.Context, in *SetMembersStatusRequest, opts ...grpc.CallOption) (*SetMembersStatusResponse, error) {
+	out := new(SetMembersStatusResponse)
+	err := c.cc.Invoke(ctx, GSLB_SetMembersStatus_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gSLBClient) GetHealthCheck(ctx context.Context, in *GetHealthCheckRequest, opts ...grpc.CallOption) (*GetHealthCheckResponse, error) {
+	out := new(GetHealthCheckResponse)
+	err := c.cc.Invoke(ctx, GSLB_GetHealthCheck_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -166,10 +188,12 @@ type GSLBServer interface {
 	GetEntry(context.Context, *GetEntryRequest) (*GetEntryResponse, error)
 	ListEntries(context.Context, *ListEntriesRequest) (*ListEntriesResponse, error)
 	GetEntryStatus(context.Context, *GetEntryStatusRequest) (*GetEntryStatusResponse, error)
-	AddMember(context.Context, *AddMemberRequest) (*emptypb.Empty, error)
+	SetMember(context.Context, *SetMemberRequest) (*emptypb.Empty, error)
 	DeleteMember(context.Context, *DeleteMemberRequest) (*emptypb.Empty, error)
-	SetMemberStatus(context.Context, *SetMemberStatusRequest) (*emptypb.Empty, error)
-	SetMembersStatusByFilter(context.Context, *SetMembersStatusByFilterRequest) (*emptypb.Empty, error)
+	GetMember(context.Context, *GetMemberRequest) (*GetMemberResponse, error)
+	ListMembers(context.Context, *ListMembersRequest) (*ListMembersResponse, error)
+	SetMembersStatus(context.Context, *SetMembersStatusRequest) (*SetMembersStatusResponse, error)
+	GetHealthCheck(context.Context, *GetHealthCheckRequest) (*GetHealthCheckResponse, error)
 	SetHealthCheck(context.Context, *SetHealthCheckRequest) (*emptypb.Empty, error)
 	ListDcs(context.Context, *ListDcsRequest) (*ListDcsResponse, error)
 	mustEmbedUnimplementedGSLBServer()
@@ -194,17 +218,23 @@ func (UnimplementedGSLBServer) ListEntries(context.Context, *ListEntriesRequest)
 func (UnimplementedGSLBServer) GetEntryStatus(context.Context, *GetEntryStatusRequest) (*GetEntryStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEntryStatus not implemented")
 }
-func (UnimplementedGSLBServer) AddMember(context.Context, *AddMemberRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddMember not implemented")
+func (UnimplementedGSLBServer) SetMember(context.Context, *SetMemberRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetMember not implemented")
 }
 func (UnimplementedGSLBServer) DeleteMember(context.Context, *DeleteMemberRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMember not implemented")
 }
-func (UnimplementedGSLBServer) SetMemberStatus(context.Context, *SetMemberStatusRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetMemberStatus not implemented")
+func (UnimplementedGSLBServer) GetMember(context.Context, *GetMemberRequest) (*GetMemberResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMember not implemented")
 }
-func (UnimplementedGSLBServer) SetMembersStatusByFilter(context.Context, *SetMembersStatusByFilterRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetMembersStatusByFilter not implemented")
+func (UnimplementedGSLBServer) ListMembers(context.Context, *ListMembersRequest) (*ListMembersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMembers not implemented")
+}
+func (UnimplementedGSLBServer) SetMembersStatus(context.Context, *SetMembersStatusRequest) (*SetMembersStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetMembersStatus not implemented")
+}
+func (UnimplementedGSLBServer) GetHealthCheck(context.Context, *GetHealthCheckRequest) (*GetHealthCheckResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetHealthCheck not implemented")
 }
 func (UnimplementedGSLBServer) SetHealthCheck(context.Context, *SetHealthCheckRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetHealthCheck not implemented")
@@ -315,20 +345,20 @@ func _GSLB_GetEntryStatus_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GSLB_AddMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddMemberRequest)
+func _GSLB_SetMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetMemberRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GSLBServer).AddMember(ctx, in)
+		return srv.(GSLBServer).SetMember(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GSLB_AddMember_FullMethodName,
+		FullMethod: GSLB_SetMember_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GSLBServer).AddMember(ctx, req.(*AddMemberRequest))
+		return srv.(GSLBServer).SetMember(ctx, req.(*SetMemberRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -351,38 +381,74 @@ func _GSLB_DeleteMember_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GSLB_SetMemberStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetMemberStatusRequest)
+func _GSLB_GetMember_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMemberRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GSLBServer).SetMemberStatus(ctx, in)
+		return srv.(GSLBServer).GetMember(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GSLB_SetMemberStatus_FullMethodName,
+		FullMethod: GSLB_GetMember_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GSLBServer).SetMemberStatus(ctx, req.(*SetMemberStatusRequest))
+		return srv.(GSLBServer).GetMember(ctx, req.(*GetMemberRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GSLB_SetMembersStatusByFilter_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetMembersStatusByFilterRequest)
+func _GSLB_ListMembers_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListMembersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GSLBServer).SetMembersStatusByFilter(ctx, in)
+		return srv.(GSLBServer).ListMembers(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GSLB_SetMembersStatusByFilter_FullMethodName,
+		FullMethod: GSLB_ListMembers_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GSLBServer).SetMembersStatusByFilter(ctx, req.(*SetMembersStatusByFilterRequest))
+		return srv.(GSLBServer).ListMembers(ctx, req.(*ListMembersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GSLB_SetMembersStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetMembersStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GSLBServer).SetMembersStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GSLB_SetMembersStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GSLBServer).SetMembersStatus(ctx, req.(*SetMembersStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GSLB_GetHealthCheck_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetHealthCheckRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GSLBServer).GetHealthCheck(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GSLB_GetHealthCheck_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GSLBServer).GetHealthCheck(ctx, req.(*GetHealthCheckRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -451,20 +517,28 @@ var GSLB_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GSLB_GetEntryStatus_Handler,
 		},
 		{
-			MethodName: "AddMember",
-			Handler:    _GSLB_AddMember_Handler,
+			MethodName: "SetMember",
+			Handler:    _GSLB_SetMember_Handler,
 		},
 		{
 			MethodName: "DeleteMember",
 			Handler:    _GSLB_DeleteMember_Handler,
 		},
 		{
-			MethodName: "SetMemberStatus",
-			Handler:    _GSLB_SetMemberStatus_Handler,
+			MethodName: "GetMember",
+			Handler:    _GSLB_GetMember_Handler,
 		},
 		{
-			MethodName: "SetMembersStatusByFilter",
-			Handler:    _GSLB_SetMembersStatusByFilter_Handler,
+			MethodName: "ListMembers",
+			Handler:    _GSLB_ListMembers_Handler,
+		},
+		{
+			MethodName: "SetMembersStatus",
+			Handler:    _GSLB_SetMembersStatus_Handler,
+		},
+		{
+			MethodName: "GetHealthCheck",
+			Handler:    _GSLB_GetHealthCheck_Handler,
 		},
 		{
 			MethodName: "SetHealthCheck",
