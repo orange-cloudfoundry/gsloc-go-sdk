@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.0.2
 	google.golang.org/genproto/googleapis/api v0.0.0-20230726155614-23370e0ffb3e
-	google.golang.org/grpc v1.58.2
+	google.golang.org/grpc v1.58.3
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v2 v2.4.0
 )
