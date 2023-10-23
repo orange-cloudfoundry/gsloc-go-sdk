@@ -20,20 +20,21 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	GSLB_SetEntry_FullMethodName          = "/gsloc.services.gslb.v1.GSLB/SetEntry"
-	GSLB_DeleteEntry_FullMethodName       = "/gsloc.services.gslb.v1.GSLB/DeleteEntry"
-	GSLB_GetEntry_FullMethodName          = "/gsloc.services.gslb.v1.GSLB/GetEntry"
-	GSLB_ListEntries_FullMethodName       = "/gsloc.services.gslb.v1.GSLB/ListEntries"
-	GSLB_GetEntryStatus_FullMethodName    = "/gsloc.services.gslb.v1.GSLB/GetEntryStatus"
-	GSLB_ListEntriesStatus_FullMethodName = "/gsloc.services.gslb.v1.GSLB/ListEntriesStatus"
-	GSLB_SetMember_FullMethodName         = "/gsloc.services.gslb.v1.GSLB/SetMember"
-	GSLB_DeleteMember_FullMethodName      = "/gsloc.services.gslb.v1.GSLB/DeleteMember"
-	GSLB_GetMember_FullMethodName         = "/gsloc.services.gslb.v1.GSLB/GetMember"
-	GSLB_ListMembers_FullMethodName       = "/gsloc.services.gslb.v1.GSLB/ListMembers"
-	GSLB_SetMembersStatus_FullMethodName  = "/gsloc.services.gslb.v1.GSLB/SetMembersStatus"
-	GSLB_GetHealthCheck_FullMethodName    = "/gsloc.services.gslb.v1.GSLB/GetHealthCheck"
-	GSLB_SetHealthCheck_FullMethodName    = "/gsloc.services.gslb.v1.GSLB/SetHealthCheck"
-	GSLB_ListDcs_FullMethodName           = "/gsloc.services.gslb.v1.GSLB/ListDcs"
+	GSLB_SetEntry_FullMethodName               = "/gsloc.services.gslb.v1.GSLB/SetEntry"
+	GSLB_DeleteEntry_FullMethodName            = "/gsloc.services.gslb.v1.GSLB/DeleteEntry"
+	GSLB_GetEntry_FullMethodName               = "/gsloc.services.gslb.v1.GSLB/GetEntry"
+	GSLB_ListEntries_FullMethodName            = "/gsloc.services.gslb.v1.GSLB/ListEntries"
+	GSLB_GetEntryStatus_FullMethodName         = "/gsloc.services.gslb.v1.GSLB/GetEntryStatus"
+	GSLB_ListEntriesStatus_FullMethodName      = "/gsloc.services.gslb.v1.GSLB/ListEntriesStatus"
+	GSLB_SetMember_FullMethodName              = "/gsloc.services.gslb.v1.GSLB/SetMember"
+	GSLB_DeleteMember_FullMethodName           = "/gsloc.services.gslb.v1.GSLB/DeleteMember"
+	GSLB_GetMember_FullMethodName              = "/gsloc.services.gslb.v1.GSLB/GetMember"
+	GSLB_ListMembers_FullMethodName            = "/gsloc.services.gslb.v1.GSLB/ListMembers"
+	GSLB_SetMembersStatus_FullMethodName       = "/gsloc.services.gslb.v1.GSLB/SetMembersStatus"
+	GSLB_GetHealthCheck_FullMethodName         = "/gsloc.services.gslb.v1.GSLB/GetHealthCheck"
+	GSLB_SetHealthCheck_FullMethodName         = "/gsloc.services.gslb.v1.GSLB/SetHealthCheck"
+	GSLB_ListDcs_FullMethodName                = "/gsloc.services.gslb.v1.GSLB/ListDcs"
+	GSLB_ListPluginHealthChecks_FullMethodName = "/gsloc.services.gslb.v1.GSLB/ListPluginHealthChecks"
 )
 
 // GSLBClient is the client API for GSLB service.
@@ -54,6 +55,7 @@ type GSLBClient interface {
 	GetHealthCheck(ctx context.Context, in *GetHealthCheckRequest, opts ...grpc.CallOption) (*GetHealthCheckResponse, error)
 	SetHealthCheck(ctx context.Context, in *SetHealthCheckRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ListDcs(ctx context.Context, in *ListDcsRequest, opts ...grpc.CallOption) (*ListDcsResponse, error)
+	ListPluginHealthChecks(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListPluginHealthChecksResponse, error)
 }
 
 type gSLBClient struct {
@@ -190,6 +192,15 @@ func (c *gSLBClient) ListDcs(ctx context.Context, in *ListDcsRequest, opts ...gr
 	return out, nil
 }
 
+func (c *gSLBClient) ListPluginHealthChecks(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListPluginHealthChecksResponse, error) {
+	out := new(ListPluginHealthChecksResponse)
+	err := c.cc.Invoke(ctx, GSLB_ListPluginHealthChecks_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GSLBServer is the server API for GSLB service.
 // All implementations must embed UnimplementedGSLBServer
 // for forward compatibility
@@ -208,6 +219,7 @@ type GSLBServer interface {
 	GetHealthCheck(context.Context, *GetHealthCheckRequest) (*GetHealthCheckResponse, error)
 	SetHealthCheck(context.Context, *SetHealthCheckRequest) (*emptypb.Empty, error)
 	ListDcs(context.Context, *ListDcsRequest) (*ListDcsResponse, error)
+	ListPluginHealthChecks(context.Context, *emptypb.Empty) (*ListPluginHealthChecksResponse, error)
 	mustEmbedUnimplementedGSLBServer()
 }
 
@@ -256,6 +268,9 @@ func (UnimplementedGSLBServer) SetHealthCheck(context.Context, *SetHealthCheckRe
 }
 func (UnimplementedGSLBServer) ListDcs(context.Context, *ListDcsRequest) (*ListDcsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDcs not implemented")
+}
+func (UnimplementedGSLBServer) ListPluginHealthChecks(context.Context, *emptypb.Empty) (*ListPluginHealthChecksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListPluginHealthChecks not implemented")
 }
 func (UnimplementedGSLBServer) mustEmbedUnimplementedGSLBServer() {}
 
@@ -522,6 +537,24 @@ func _GSLB_ListDcs_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GSLB_ListPluginHealthChecks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GSLBServer).ListPluginHealthChecks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GSLB_ListPluginHealthChecks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GSLBServer).ListPluginHealthChecks(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GSLB_ServiceDesc is the grpc.ServiceDesc for GSLB service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -584,6 +617,10 @@ var GSLB_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListDcs",
 			Handler:    _GSLB_ListDcs_Handler,
+		},
+		{
+			MethodName: "ListPluginHealthChecks",
+			Handler:    _GSLB_ListPluginHealthChecks_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

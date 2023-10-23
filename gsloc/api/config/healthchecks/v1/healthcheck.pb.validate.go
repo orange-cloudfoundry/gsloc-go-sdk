@@ -309,6 +309,99 @@ func (m *HealthCheck) validate(all bool) error {
 			}
 		}
 
+	case *HealthCheck_PluginHealthCheck:
+
+		if all {
+			switch v := interface{}(m.GetPluginHealthCheck()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, HealthCheckValidationError{
+						field:  "PluginHealthCheck",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, HealthCheckValidationError{
+						field:  "PluginHealthCheck",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetPluginHealthCheck()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return HealthCheckValidationError{
+					field:  "PluginHealthCheck",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	case *HealthCheck_IcmpHealthCheck:
+
+		if all {
+			switch v := interface{}(m.GetIcmpHealthCheck()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, HealthCheckValidationError{
+						field:  "IcmpHealthCheck",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, HealthCheckValidationError{
+						field:  "IcmpHealthCheck",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetIcmpHealthCheck()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return HealthCheckValidationError{
+					field:  "IcmpHealthCheck",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	case *HealthCheck_UdpHealthCheck:
+
+		if all {
+			switch v := interface{}(m.GetUdpHealthCheck()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, HealthCheckValidationError{
+						field:  "UdpHealthCheck",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, HealthCheckValidationError{
+						field:  "UdpHealthCheck",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetUdpHealthCheck()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return HealthCheckValidationError{
+					field:  "UdpHealthCheck",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	default:
 		err := HealthCheckValidationError{
 			field:  "HealthChecker",
@@ -1322,3 +1415,531 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = NoHealthCheckValidationError{}
+
+// Validate checks the field values on PluginHealthCheck with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *PluginHealthCheck) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PluginHealthCheck with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// PluginHealthCheckMultiError, or nil if none found.
+func (m *PluginHealthCheck) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PluginHealthCheck) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetName()) < 1 {
+		err := PluginHealthCheckValidationError{
+			field:  "Name",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if all {
+		switch v := interface{}(m.GetOptions()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, PluginHealthCheckValidationError{
+					field:  "Options",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, PluginHealthCheckValidationError{
+					field:  "Options",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetOptions()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return PluginHealthCheckValidationError{
+				field:  "Options",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return PluginHealthCheckMultiError(errors)
+	}
+
+	return nil
+}
+
+// PluginHealthCheckMultiError is an error wrapping multiple validation errors
+// returned by PluginHealthCheck.ValidateAll() if the designated constraints
+// aren't met.
+type PluginHealthCheckMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PluginHealthCheckMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PluginHealthCheckMultiError) AllErrors() []error { return m }
+
+// PluginHealthCheckValidationError is the validation error returned by
+// PluginHealthCheck.Validate if the designated constraints aren't met.
+type PluginHealthCheckValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PluginHealthCheckValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PluginHealthCheckValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PluginHealthCheckValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PluginHealthCheckValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PluginHealthCheckValidationError) ErrorName() string {
+	return "PluginHealthCheckValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e PluginHealthCheckValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPluginHealthCheck.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PluginHealthCheckValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PluginHealthCheckValidationError{}
+
+// Validate checks the field values on IcmpHealthCheck with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *IcmpHealthCheck) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on IcmpHealthCheck with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// IcmpHealthCheckMultiError, or nil if none found.
+func (m *IcmpHealthCheck) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *IcmpHealthCheck) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetDelay() == nil {
+		err := IcmpHealthCheckValidationError{
+			field:  "Delay",
+			reason: "value is required",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if d := m.GetDelay(); d != nil {
+		dur, err := d.AsDuration(), d.CheckValid()
+		if err != nil {
+			err = IcmpHealthCheckValidationError{
+				field:  "Delay",
+				reason: "value is not a valid duration",
+				cause:  err,
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+
+			gt := time.Duration(0*time.Second + 0*time.Nanosecond)
+
+			if dur <= gt {
+				err := IcmpHealthCheckValidationError{
+					field:  "Delay",
+					reason: "value must be greater than 0s",
+				}
+				if !all {
+					return err
+				}
+				errors = append(errors, err)
+			}
+
+		}
+	}
+
+	if len(errors) > 0 {
+		return IcmpHealthCheckMultiError(errors)
+	}
+
+	return nil
+}
+
+// IcmpHealthCheckMultiError is an error wrapping multiple validation errors
+// returned by IcmpHealthCheck.ValidateAll() if the designated constraints
+// aren't met.
+type IcmpHealthCheckMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m IcmpHealthCheckMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m IcmpHealthCheckMultiError) AllErrors() []error { return m }
+
+// IcmpHealthCheckValidationError is the validation error returned by
+// IcmpHealthCheck.Validate if the designated constraints aren't met.
+type IcmpHealthCheckValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e IcmpHealthCheckValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e IcmpHealthCheckValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e IcmpHealthCheckValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e IcmpHealthCheckValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e IcmpHealthCheckValidationError) ErrorName() string { return "IcmpHealthCheckValidationError" }
+
+// Error satisfies the builtin error interface
+func (e IcmpHealthCheckValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sIcmpHealthCheck.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = IcmpHealthCheckValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = IcmpHealthCheckValidationError{}
+
+// Validate checks the field values on UdpHealthCheck with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *UdpHealthCheck) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UdpHealthCheck with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in UdpHealthCheckMultiError,
+// or nil if none found.
+func (m *UdpHealthCheck) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UdpHealthCheck) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetSend()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, UdpHealthCheckValidationError{
+					field:  "Send",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, UdpHealthCheckValidationError{
+					field:  "Send",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetSend()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UdpHealthCheckValidationError{
+				field:  "Send",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	for idx, item := range m.GetReceive() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UdpHealthCheckValidationError{
+						field:  fmt.Sprintf("Receive[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UdpHealthCheckValidationError{
+						field:  fmt.Sprintf("Receive[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UdpHealthCheckValidationError{
+					field:  fmt.Sprintf("Receive[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.GetPingTimeout() == nil {
+		err := UdpHealthCheckValidationError{
+			field:  "PingTimeout",
+			reason: "value is required",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if d := m.GetPingTimeout(); d != nil {
+		dur, err := d.AsDuration(), d.CheckValid()
+		if err != nil {
+			err = UdpHealthCheckValidationError{
+				field:  "PingTimeout",
+				reason: "value is not a valid duration",
+				cause:  err,
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+
+			gt := time.Duration(0*time.Second + 0*time.Nanosecond)
+
+			if dur <= gt {
+				err := UdpHealthCheckValidationError{
+					field:  "PingTimeout",
+					reason: "value must be greater than 0s",
+				}
+				if !all {
+					return err
+				}
+				errors = append(errors, err)
+			}
+
+		}
+	}
+
+	if m.GetDelay() == nil {
+		err := UdpHealthCheckValidationError{
+			field:  "Delay",
+			reason: "value is required",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if d := m.GetDelay(); d != nil {
+		dur, err := d.AsDuration(), d.CheckValid()
+		if err != nil {
+			err = UdpHealthCheckValidationError{
+				field:  "Delay",
+				reason: "value is not a valid duration",
+				cause:  err,
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		} else {
+
+			gt := time.Duration(0*time.Second + 0*time.Nanosecond)
+
+			if dur <= gt {
+				err := UdpHealthCheckValidationError{
+					field:  "Delay",
+					reason: "value must be greater than 0s",
+				}
+				if !all {
+					return err
+				}
+				errors = append(errors, err)
+			}
+
+		}
+	}
+
+	if len(errors) > 0 {
+		return UdpHealthCheckMultiError(errors)
+	}
+
+	return nil
+}
+
+// UdpHealthCheckMultiError is an error wrapping multiple validation errors
+// returned by UdpHealthCheck.ValidateAll() if the designated constraints
+// aren't met.
+type UdpHealthCheckMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UdpHealthCheckMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UdpHealthCheckMultiError) AllErrors() []error { return m }
+
+// UdpHealthCheckValidationError is the validation error returned by
+// UdpHealthCheck.Validate if the designated constraints aren't met.
+type UdpHealthCheckValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UdpHealthCheckValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UdpHealthCheckValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UdpHealthCheckValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UdpHealthCheckValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UdpHealthCheckValidationError) ErrorName() string { return "UdpHealthCheckValidationError" }
+
+// Error satisfies the builtin error interface
+func (e UdpHealthCheckValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUdpHealthCheck.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UdpHealthCheckValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UdpHealthCheckValidationError{}
